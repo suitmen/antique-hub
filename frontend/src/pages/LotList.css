@@ -1,0 +1,77 @@
+.lot-list {
+  display: flex;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  gap: 2rem;
+}
+
+.filters {
+  width: 300px;
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  height: fit-content;
+}
+
+.filters h2 {
+  margin-top: 0;
+  color: #8B4513;
+}
+
+.filter-group {
+  margin-bottom: 1rem;
+}
+
+.filter-group input,
+.filter-group select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.price-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.price-filters input {
+  width: 100%;
+}
+
+.lots {
+  flex: 1;
+}
+
+.lots h2 {
+  color: #8B4513;
+  margin-bottom: 1rem;
+}
+
+.lot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #dc3545;
+}
+
+@media (max-width: 768px) {
+  .lot-list {
+    flex-direction: column;
+  }
+  
+  .filters {
+    width: 100%;
+  }
+}

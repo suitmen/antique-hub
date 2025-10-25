@@ -1,0 +1,85 @@
+.profile {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.profile h1 {
+  color: #8B4513;
+  text-align: center;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 2rem;
+}
+
+.tab {
+  padding: 1rem 2rem;
+  background-color: #f8f9fa;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background-color: #fff;
+  border-bottom: 3px solid #8B4513;
+  font-weight: bold;
+}
+
+.tab-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-info .info-group {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.profile-info .info-group label {
+  font-weight: bold;
+  width: 200px;
+}
+
+.profile-info .info-group span {
+  flex: 1;
+}
+
+.lots-list, .orders-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.lot-item, .order-item {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.lot-item h3, .order-item h3 {
+  margin-top: 0;
+  color: #8B4513;
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    flex-direction: column;
+  }
+  
+  .profile-info .info-group {
+    flex-direction: column;
+  }
+  
+  .profile-info .info-group label {
+    width: auto;
+    margin-bottom: 0.25rem;
+  }
+}

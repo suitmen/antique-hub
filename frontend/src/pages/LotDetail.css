@@ -1,0 +1,63 @@
+.lot-detail {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.lot-images {
+  flex: 1;
+}
+
+.lot-images img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+}
+
+.lot-info {
+  flex: 1;
+}
+
+.lot-info h1 {
+  margin-top: 0;
+  color: #8B4513;
+}
+
+.lot-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.lot-meta span {
+  background-color: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.lot-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #8B4513;
+  margin: 1rem 0;
+}
+
+.lot-description h2,
+.lot-seller h3 {
+  color: #8B4513;
+  margin-top: 2rem;
+}
+
+.lot-description p {
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .lot-detail {
+    flex-direction: column;
+  }
+}

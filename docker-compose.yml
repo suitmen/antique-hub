@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: antiquehub_backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://test_user:password@213.165.55.132:5432/antique_hub
+      SECRET_KEY: your-secret-key-change-in-production
+      YOOKASSA_SHOP_ID: your_yookassa_shop_id
+      YOOKASSA_SECRET_KEY: your_yookassa_secret_key
+      STRIPE_SECRET_KEY: your_stripe_secret_key
+      STRIPE_WEBHOOK_SECRET: your_stripe_webhook_secret
+    networks:
+      - antiquehub_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: antiquehub_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - antiquehub_network
+
+networks:
+  antiquehub_network:
+    driver: bridge
