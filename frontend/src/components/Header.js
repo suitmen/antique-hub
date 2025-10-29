@@ -14,6 +14,7 @@ const Header = () => {
           <Link to="/create-lot">Создать лот</Link>
           <Link to="/support">Поддержка</Link>
           <Link to="/profile">Профиль</Link>
+          <Link to="/admin">Админка</Link>
           <Link to="/login">Вход</Link>
           <Link to="/register">Регистрация</Link>
         </nav>

@@ -71,7 +71,7 @@ class Lot(Base):
     # Отношения
     owner = relationship("User", back_populates="lots")
     orders = relationship("Order", back_populates="lot")
-    tickets = relationship("SupportTicket", back_populates="lot")
+#    tickets = relationship("SupportTicket", back_populates="lot")
 
 # Модель заказа
 class Order(Base):
@@ -104,4 +104,5 @@ class SupportTicket(Base):
     
     # Отношения
     user = relationship("User", back_populates="tickets")
-    lot = relationship("Lot", back_populates="tickets")
+#    lot = relationship("Lot", back_populates="tickets")
+#    order = relationship("Order", back_populates="tickets")

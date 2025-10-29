@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/config';
 import './LotDetail.css';
 
 const LotDetail = () => {
@@ -17,7 +17,7 @@ const LotDetail = () => {
   const fetchLot = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/lots/${id}`);
+      const response = await api.get(`/lots/${id}`);
       setLot(response.data);
     } catch (err) {
       setError('Ошибка загрузки лота');
@@ -31,14 +31,14 @@ const LotDetail = () => {
       setOrderLoading(true);
       
       // Создание заказа
-      const response = await axios.post('/api/orders/', {
+      const response = await api.post('/orders/', {
         item_id: parseInt(id)
       });
       
       // Инициализация платежа
-      const paymentResponse = await axios.post('/api/payments/init', {
+      const paymentResponse = await api.post('/payments/init', {
         item_id: parseInt(id),
-        currency: lot.currency
+        currency: lot.currency || 'RUB'
       });
       
       // Перенаправление на страницу оплаты
@@ -62,7 +62,7 @@ const LotDetail = () => {
       'EUR': '€'
     };
     
-    return `${price.toLocaleString()} ${currencySymbols[currency] || currency}`;
+    return `${price?.toLocaleString() || '0'} ${currencySymbols[currency] || currency || 'RUB'}`;
   };
 
   if (loading) return <div className="loading">Загрузка...</div>;
@@ -74,19 +74,19 @@ const LotDetail = () => {
       <div className="lot-images">
         {lot.image_urls && lot.image_urls.length > 0 ? (
           lot.image_urls.map((url, index) => (
-            <img key={index} src={url} alt={`${lot.title} ${index + 1}`} />
+            <img key={index} src={url} alt={`${lot.title || 'Лот'} ${index + 1}`} />
           ))
         ) : (
-          <img src="/placeholder-image.jpg" alt={lot.title} />
+          <img src="/placeholder-image.jpg" alt={lot.title || 'Лот'} />
         )}
       </div>
       
       <div className="lot-info">
-        <h1>{lot.title}</h1>
+        <h1>{lot.title || 'Без названия'}</h1>
         <div className="lot-meta">
-          <span className="category">{lot.category}</span>
-          <span className="era">{lot.era}</span>
-          <span className="material">{lot.material}</span>
+          <span className="category">{lot.category || 'Не указано'}</span>
+          <span className="era">{lot.era || 'Не указано'}</span>
+          <span className="material">{lot.material || 'Не указано'}</span>
         </div>
         
         <div className="lot-price">
@@ -95,12 +95,12 @@ const LotDetail = () => {
         
         <div className="lot-description">
           <h2>Описание</h2>
-          <p>{lot.description}</p>
+          <p>{lot.description || 'Описание не указано'}</p>
         </div>
         
         <div className="lot-seller">
           <h3>Продавец</h3>
-          <p>ID продавца: {lot.seller_id}</p>
+          <p>ID продавца: {lot.seller_id || 'Не указано'}</p>
         </div>
         
         <button 

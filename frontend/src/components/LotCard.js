@@ -11,7 +11,7 @@ const LotCard = ({ lot }) => {
       'EUR': '€'
     };
     
-    return `${price.toLocaleString()} ${currencySymbols[currency] || currency}`;
+    return `${price?.toLocaleString() || '0'} ${currencySymbols[currency] || currency || 'RUB'}`;
   };
 
   // Функция для получения первого изображения
@@ -27,7 +27,7 @@ const LotCard = ({ lot }) => {
       <div className="lot-image">
         <img 
           src={getFirstImage(lot.image_urls)} 
-          alt={lot.title} 
+          alt={lot.title || 'Лот'} 
           onError={(e) => {
             e.target.src = '/placeholder-image.jpg';
           }}
@@ -35,15 +35,15 @@ const LotCard = ({ lot }) => {
       </div>
       <div className="lot-content">
         <h3 className="lot-title">
-          <Link to={`/lots/${lot.id}`}>{lot.title}</Link>
+          <Link to={`/lots/${lot.id}`}>{lot.title || 'Без названия'}</Link>
         </h3>
-        <p className="lot-category">{lot.category}</p>
-        <p className="lot-era">{lot.era}</p>
+        <p className="lot-category">{lot.category || 'Не указано'}</p>
+        <p className="lot-era">{lot.era || 'Не указано'}</p>
         <div className="lot-price">
           {formatPrice(lot.price, lot.currency)}
         </div>
         <div className="lot-seller">
-          Продавец: {lot.seller_id}
+          Продавец: ID {lot.seller_id || 'Не указано'}
         </div>
       </div>
     </div>

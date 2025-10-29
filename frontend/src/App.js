@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './pages/Home';
@@ -9,9 +9,14 @@ import LotDetail from './pages/LotDetail';
 import CreateLot from './pages/CreateLot';
 import Profile from './pages/Profile';
 import Support from './pages/Support';
+import Admin from './pages/Admin';
 import './App.css';
 
 function App() {
+  useEffect(() => {
+    console.log('App loaded, checking token:', localStorage.getItem('token'));
+  }, []);
+
   return (
     <Router>
       <div className="App">
@@ -26,6 +31,7 @@ function App() {
             <Route path="/create-lot" element={<CreateLot />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/support" element={<Support />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
         </main>
       </div>

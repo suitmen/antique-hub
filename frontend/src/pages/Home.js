@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
@@ -8,8 +9,8 @@ const Home = () => {
         <h1>Добро пожаловать в AntiqueHub</h1>
         <p>Платформа для покупки и продажи антиквариата</p>
         <div className="cta-buttons">
-          <button className="btn btn-primary">Найти антиквариат</button>
-          <button className="btn btn-secondary">Продать антиквариат</button>
+          <Link to="/lots" className="btn btn-primary">Найти антиквариат</Link>
+          <Link to="/create-lot" className="btn btn-secondary">Продать антиквариат</Link>
         </div>
       </div>
       

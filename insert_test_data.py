@@ -79,6 +79,7 @@ def insert_test_data():
                 verified=user_data["verified"],
                 role=user_data["role"]
             )
+            print(user.hashed_password)
             db.add(user)
             db.flush()  # Get the ID without committing
             users.append(user)

@@ -62,10 +62,16 @@ def create_lot(db: Session, lot: schemas.LotCreate, user_id: int):
 def get_order(db: Session, order_id: int):
     return db.query(models.Order).filter(models.Order.id == order_id).first()
 
-def create_order(db: Session, order: schemas.OrderCreate, user_id: int):
+def get_orders(db: Session, skip: int = 0, limit: int = 100, user_id: int = None):
+    query = db.query(models.Order)
+    if user_id:
+        query = query.filter(models.Order.buyer_id == user_id)
+    return query.offset(skip).limit(limit).all()
+
+def create_order(db: Session, order: schemas.OrderCreate, buyer_id: int):
     db_order = models.Order(
         item_id=order.item_id,
-        buyer_id=user_id
+        buyer_id=buyer_id
     )
     db.add(db_order)
     db.commit()
@@ -76,7 +82,13 @@ def create_order(db: Session, order: schemas.OrderCreate, user_id: int):
 def get_ticket(db: Session, ticket_id: int):
     return db.query(models.SupportTicket).filter(models.SupportTicket.id == ticket_id).first()
 
-def create_ticket(db: Session, ticket: schemas.SupportTicketCreate, user_id: int):
+def get_support_tickets(db: Session, skip: int = 0, limit: int = 100, user_id: int = None):
+    query = db.query(models.SupportTicket)
+    if user_id:
+        query = query.filter(models.SupportTicket.user_id == user_id)
+    return query.offset(skip).limit(limit).all()
+
+def create_support_ticket(db: Session, ticket: schemas.SupportTicketCreate, user_id: int):
     db_ticket = models.SupportTicket(
         subject=ticket.subject,
         message=ticket.message,

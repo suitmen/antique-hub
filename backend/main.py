@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -14,9 +14,9 @@ app = FastAPI(title="AntiqueHub API", description="API для платформы
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # В production нужно указать конкретные origins
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Разрешаем фронтенд
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -55,10 +55,22 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+@app.get("/users/me", response_model=schemas.User)
+def read_current_user(request: Request, current_user: models.User = Depends(auth.get_current_active_user)):
+    print(f"read_current_user called with: {current_user}")
+    # Convert the SQLAlchemy model to Pydantic schema
+    return schemas.User.model_validate(current_user)
+
+# Добавим простой endpoint для тестирования токена
+@app.get("/test-token")
+def test_token(request: Request, current_user: models.User = Depends(auth.get_current_active_user)):
+    return {"message": "Token is valid", "user": current_user.email}
+
 # Лоты
 @app.post("/lots/", response_model=schemas.Lot)
 def create_lot(lot: schemas.LotCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_active_user)):
-    return crud.create_lot(db=db, lot=lot, user_id=current_user.id)
+    db_lot = crud.create_lot(db=db, lot=lot, user_id=current_user.id)
+    return schemas.Lot.model_validate(db_lot)
 
 @app.get("/lots/", response_model=List[schemas.Lot])
 def read_lots(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -74,16 +86,51 @@ def read_lot(lot_id: int, db: Session = Depends(get_db)):
 
 # Аутентификация
 @app.post("/token", response_model=schemas.Token)
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = auth.authenticate_user(db, form_data.username, form_data.password)
+def login_for_access_token(form_data: schemas.LoginRequest, db: Session = Depends(get_db)):
+    user = auth.authenticate_user(db, form_data.email, form_data.password)
+
+    print(user)
+    
     if not user:
         raise HTTPException(
             status_code=401,
-            detail="Incorrect username or password",
+            detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = auth.timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth.create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
+
+    print(access_token)
+
     return {"access_token": access_token, "token_type": "bearer"}
+
+# Заказы
+@app.post("/orders/", response_model=schemas.Order)
+def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_active_user)):
+    db_order = crud.create_order(db=db, order=order, buyer_id=current_user.id)
+    return schemas.Order.model_validate(db_order)
+
+@app.get("/orders/", response_model=List[schemas.Order])
+def read_orders(skip: int = 0, limit: int = 100, user_id: int = None, db: Session = Depends(get_db)):
+    orders = crud.get_orders(db, skip=skip, limit=limit, user_id=user_id)
+    return orders
+
+# Платежи
+@app.post("/payments/init")
+def init_payment(item_id: int, currency: str = "RUB", db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_active_user)):
+    # Здесь должна быть логика инициализации платежа
+    # Пока возвращаем заглушку
+    return {"redirect_url": f"/payment/{item_id}", "payment_id": f"pay_{item_id}_{current_user.id}"}
+
+# Поддержка
+@app.get("/support/tickets", response_model=List[schemas.SupportTicket])
+def read_support_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_active_user)):
+    tickets = crud.get_support_tickets(db, skip=skip, limit=limit, user_id=current_user.id)
+    return tickets
+
+@app.post("/support/tickets", response_model=schemas.SupportTicket)
+def create_support_ticket(ticket: schemas.SupportTicketCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_active_user)):
+    db_ticket = crud.create_support_ticket(db=db, ticket=ticket, user_id=current_user.id)
+    return schemas.SupportTicket.model_validate(db_ticket)

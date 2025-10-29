@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/config';
 import './Auth.css';
+
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -50,13 +51,16 @@ const Login = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post('/api/token', {
-        username: formData.email,
+      const response = await api.post('/token', {
+        email: formData.email,
         password: formData.password
       });
       
+      console.log('Login response:', response.data);
+      
       // Сохранение токена в localStorage
       localStorage.setItem('token', response.data.access_token);
+      console.log('Token saved to localStorage:', response.data.access_token);
       
       // Перенаправление на главную страницу
       window.location.href = '/';

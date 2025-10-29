@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/config';
 import './Admin.css';
 
 const Admin = () => {
@@ -17,9 +17,9 @@ const Admin = () => {
   const fetchAdminData = async () => {
     try {
       const [usersResponse, lotsResponse, ticketsResponse] = await Promise.all([
-        axios.get('/api/admin/users/'),
-        axios.get('/api/admin/lots/'),
-        axios.get('/api/admin/tickets/')
+        api.get('/admin/users/'),
+        api.get('/admin/lots/'),
+        api.get('/admin/tickets/')
       ]);
       
       setUsers(usersResponse.data);
@@ -34,7 +34,7 @@ const Admin = () => {
 
   const handleUserUpdate = async (userId, updates) => {
     try {
-      await axios.put(`/api/admin/users/${userId}`, updates);
+      await api.put(`/admin/users/${userId}`, updates);
       fetchAdminData(); // Обновляем данные после изменения
     } catch (err) {
       alert('Ошибка обновления пользователя: ' + (err.response?.data?.detail || 'Неизвестная ошибка'));
@@ -43,7 +43,7 @@ const Admin = () => {
 
   const handleLotUpdate = async (lotId, updates) => {
     try {
-      await axios.put(`/api/admin/lots/${lotId}`, updates);
+      await api.put(`/admin/lots/${lotId}`, updates);
       fetchAdminData(); // Обновляем данные после изменения
     } catch (err) {
       alert('Ошибка обновления лота: ' + (err.response?.data?.detail || 'Неизвестная ошибка'));
@@ -52,7 +52,7 @@ const Admin = () => {
 
   const handleTicketUpdate = async (ticketId, updates) => {
     try {
-      await axios.put(`/api/admin/tickets/${ticketId}`, updates);
+      await api.put(`/admin/tickets/${ticketId}`, updates);
       fetchAdminData(); // Обновляем данные после изменения
     } catch (err) {
       alert('Ошибка обновления тикета: ' + (err.response?.data?.detail || 'Неизвестная ошибка'));
@@ -61,7 +61,7 @@ const Admin = () => {
 
   const handleExport = async (type) => {
     try {
-      const response = await axios.get(`/api/admin/export/${type}`);
+      const response = await api.get(`/admin/export/${type}`);
       const blob = new Blob([response.data.data], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');

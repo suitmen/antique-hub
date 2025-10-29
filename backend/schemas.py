@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from pydantic import ConfigDict
 from typing import List, Optional
 from datetime import datetime
 from models import UserRole, LotStatus, OrderStatus, TicketStatus, TicketCategory
@@ -17,8 +18,7 @@ class User(UserBase):
     role: UserRole
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Схемы токенов
 class Token(BaseModel):
@@ -27,6 +27,11 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+# Входная модель JSON
+class LoginRequest(BaseModel):
+    email: str
+    password: str    
 
 # Базовые схемы лотов
 class LotBase(BaseModel):
@@ -49,8 +54,7 @@ class Lot(LotBase):
     seller_id: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Базовые схемы заказов
 class OrderBase(BaseModel):
@@ -67,8 +71,7 @@ class Order(OrderBase):
     payment_provider: Optional[str] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # Базовые схемы тикетов поддержки
 class SupportTicketBase(BaseModel):
@@ -86,5 +89,4 @@ class SupportTicket(SupportTicketBase):
     status: TicketStatus
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

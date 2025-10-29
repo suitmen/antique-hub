@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/config';
 import './Profile.css';
 
 const Profile = () => {
@@ -16,18 +16,31 @@ const Profile = () => {
 
   const fetchUserData = async () => {
     try {
+      console.log('Fetching user data...');
+      console.log('Token in localStorage:', localStorage.getItem('token'));
+      
+      // Сначала тестируем простой endpoint
+      try {
+        const testResponse = await api.get('/test-token');
+        console.log('Test token response:', testResponse.data);
+      } catch (testErr) {
+        console.error('Test token error:', testErr);
+      }
+      
       // Получение данных пользователя
-      const userResponse = await axios.get('/api/users/me');
+      const userResponse = await api.get('/users/me');
+      console.log('User response:', userResponse.data);
       setUser(userResponse.data);
       
       // Получение лотов пользователя
-      const lotsResponse = await axios.get(`/api/lots/?seller_id=${userResponse.data.id}`);
+      const lotsResponse = await api.get(`/lots/?seller_id=${userResponse.data.id}`);
       setLots(lotsResponse.data);
       
       // Получение заказов пользователя
-      const ordersResponse = await axios.get(`/api/orders/?user_id=${userResponse.data.id}`);
+      const ordersResponse = await api.get(`/orders/?user_id=${userResponse.data.id}`);
       setOrders(ordersResponse.data);
     } catch (err) {
+      console.error('Error fetching user data:', err);
       setError('Ошибка загрузки данных профиля');
     } finally {
       setLoading(false);

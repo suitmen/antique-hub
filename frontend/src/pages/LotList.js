@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/config';
 import LotCard from '../components/LotCard';
 import './LotList.css';
 
@@ -22,7 +22,7 @@ const LotList = () => {
   const fetchLots = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/lots/');
+      const response = await api.get('/lots/');
       setLots(response.data);
     } catch (err) {
       setError('Ошибка загрузки лотов');
@@ -40,7 +40,7 @@ const LotList = () => {
 
   const filteredLots = lots.filter(lot => {
     // Фильтрация по поиску
-    if (filters.search && !lot.title.toLowerCase().includes(filters.search.toLowerCase())) {
+    if (filters.search && lot.title && !lot.title.toLowerCase().includes(filters.search.toLowerCase())) {
       return false;
     }
     

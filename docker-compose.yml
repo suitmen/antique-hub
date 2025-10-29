@@ -29,7 +29,7 @@ services:
       - backend
     networks:
       - antiquehub_network
-
+ 
 networks:
   antiquehub_network:
     driver: bridge

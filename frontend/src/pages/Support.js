@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/config';
 import './Support.css';
 
 const Support = () => {
@@ -11,7 +11,7 @@ const Support = () => {
     subject: '',
     message: '',
     category: 'item',
-    order_id: ''
+    order_id: null
   });
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const Support = () => {
 
   const fetchTickets = async () => {
     try {
-      const response = await axios.get('/api/support/tickets');
+      const response = await api.get('/support/tickets');
       setTickets(response.data);
     } catch (err) {
       setError('Ошибка загрузки тикетов');
@@ -40,14 +40,14 @@ const Support = () => {
     e.preventDefault();
     
     try {
-      await axios.post('/api/support/tickets', formData);
+      await api.post('/support/tickets', formData);
       
       // Сброс формы и обновление списка тикетов
       setFormData({
         subject: '',
         message: '',
         category: 'item',
-        order_id: ''
+        order_id: null
       });
       setShowForm(false);
       fetchTickets();

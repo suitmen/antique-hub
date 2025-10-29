@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/config';
 import './CreateLot.css';
 
 const CreateLot = () => {
@@ -54,7 +54,7 @@ const CreateLot = () => {
       };
       
       // Отправка данных лота на сервер
-      await axios.post('/api/lots/', lotData);
+      await api.post('/lots/', lotData);
       
       setSuccess(true);
       setFormData({

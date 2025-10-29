@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/config';
 import './Auth.css';
 
 const Register = () => {
@@ -57,16 +57,14 @@ const Register = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post('/api/users/', {
+      await api.post('/users/', {
         email: formData.email,
         password: formData.password
       });
       
-      // Сохранение токена в localStorage
-      localStorage.setItem('token', response.data.access_token);
-      
-      // Перенаправление на главную страницу
-      window.location.href = '/';
+      // После успешной регистрации перенаправляем на страницу входа
+      alert('Регистрация успешна! Теперь войдите в систему.');
+      window.location.href = '/login';
     } catch (error) {
       setErrors({
         general: error.response?.data?.detail || 'Ошибка регистрации'
