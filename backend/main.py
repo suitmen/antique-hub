@@ -36,6 +36,12 @@ def read_root():
     return {"message": "Welcome to AntiqueHub API"}
 
 # Пользователи
+@app.get("/users/me", response_model=schemas.User)
+async def read_current_user(request: Request, current_user: models.User = Depends(auth.get_current_active_user)):
+    print(f"read_current_user called with: {current_user}")
+    # Convert the SQLAlchemy model to Pydantic schema
+    return schemas.User.model_validate(current_user)
+
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
@@ -55,11 +61,7 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@app.get("/users/me", response_model=schemas.User)
-def read_current_user(request: Request, current_user: models.User = Depends(auth.get_current_active_user)):
-    print(f"read_current_user called with: {current_user}")
-    # Convert the SQLAlchemy model to Pydantic schema
-    return schemas.User.model_validate(current_user)
+
 
 # Добавим простой endpoint для тестирования токена
 @app.get("/test-token")
