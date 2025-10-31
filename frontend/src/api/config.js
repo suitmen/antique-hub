@@ -3,6 +3,8 @@ import axios from 'axios';
 // Базовый URL для API
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
+console.log('BASE URL:', API_BASE_URL);
+
 // Создание экземпляра axios с базовой конфигурацией
 const api = axios.create({
   baseURL: API_BASE_URL,
